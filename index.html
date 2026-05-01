@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Chess - Pro Edition</title>
     <style>
         :root { 
@@ -23,7 +24,6 @@
         .close-panel { background: #d32f2f; color: white; border: none; padding: 5px 10px; cursor: pointer; float: right; border-radius: 4px; }
         .panel-btn { width: 100%; padding: 12px; margin-bottom: 8px; background: var(--panel-bg); border: 1px solid var(--board-border); color: var(--text); cursor: pointer; border-radius: 6px; font-weight: bold; }
         
-        /* Zamanlayıcı Görünümü */
         .timer-container { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; font-family: monospace; }
         .timer-box { flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border: 1px solid var(--board-border); }
         .timer-box.active { border-color: gold; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
@@ -97,10 +97,9 @@
         <div class="coords-h"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
     </div>
     <div class="panel">
-        <!-- Zamanlayıcı Arayüzü -->
         <div id="timer-ui" class="timer-container" style="display: none;">
             <div id="timer-w" class="timer-box">
-                <span class="timer-label">SİZ</span>
+                <span class="timer-label" id="lbl-you">SİZ</span>
                 <span id="val-w" class="timer-val">10:00</span>
             </div>
             <div id="timer-b" class="timer-box">
@@ -210,8 +209,10 @@
         document.getElementById('lbl-timer-opt').innerText = langData[lang].timer;
         document.getElementById('opt-easy').innerText = langData[lang].easy;
         document.getElementById('opt-hard').innerText = langData[lang].hard;
+        document.getElementById('lbl-you').innerText = langData[lang].you.toUpperCase();
         document.getElementById('btn-timer-toggle').innerText = `${langData[lang].timer}: ${timerEnabled ? langData[lang].on : langData[lang].off}`;
         userNameInput.placeholder = langData[lang].namePh;
+        updateThemeText();
     }
 
     function updateStatus() {
@@ -383,8 +384,17 @@
         });
     }
 
+    function toggleTheme() { 
+        document.body.classList.toggle('light-mode'); 
+        updateThemeText(); 
+    }
+
+    function updateThemeText() {
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('theme-text').innerText = isLight ? langData[currentLang].dark : langData[currentLang].light;
+    }
+
     initBoard();
-    function toggleTheme() { document.body.classList.toggle('light-mode'); updateThemeText(); }
 </script>
 </body>
 </html>
