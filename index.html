@@ -10,6 +10,25 @@
             --white-sq: #f0d9b5; --black-sq: #b58863; --text: #d7ccc8;
             --accent: rgba(255, 215, 0, 0.6); --check: #d32f2f; --sidebar-bg: #2a1b18;
         }
+
+        /* --- GÜNCELLEME EKRANI TASARIMI --- */
+        #update-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; color: #333; z-index: 10000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif; text-align: center;
+        }
+        .update-spinner {
+            width: 50px; height: 50px; border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .update-progress { width: 250px; height: 10px; background: #eee; border-radius: 5px; margin: 15px; overflow: hidden; }
+        .update-bar { width: 40%; height: 100%; background: #3498db; animation: wave 2s infinite ease-in-out; }
+        @keyframes wave { 0% { margin-left: -100%; } 100% { margin-left: 100%; } }
+        /* ---------------------------------- */
+
         .light-mode {
             --bg: #e0e0e0; --panel-bg: #ffffff; --board-border: #5d4037;
             --white-sq: #ffffff; --black-sq: #9e9e9e; --text: #3e2723; --sidebar-bg: #f5f5f5;
@@ -78,102 +97,145 @@
 </head>
 <body>
 
-<div id="lobby">
-    <div class="lobby-card">
-        <h1 id="auth-title">MASTER CHESS ONLİNE</h1>
-        <div id="auth-inputs">
-            <input type="text" id="authNameInput" class="name-input" placeholder="Kullanıcı Adı">
-            <input type="password" id="authPassInput" class="name-input" placeholder="Şifre">
-            <button class="start-btn" id="btn-auth" onclick="handleAuth()">GİRİŞ / KAYIT</button>
-        </div>
-        <div id="welcome-area" style="display:none;">
-            <h2 id="welcome-text">Hoşgeldin!</h2>
-            <button class="start-btn" id="btn-start" onclick="startGame()">OYUNU BAŞLAT</button>
-            <button class="panel-btn" id="btn-change-acc" style="background:transparent; border:none;" onclick="logout()">Hesap Değiştir</button>
-        </div>
+<!-- GÜNCELLEME EKRANI (JS ile kontrol edilir) -->
+<div id="update-layer">
+    <div class="update-spinner"></div>
+    <h1 id="up-title">SİSTEM GÜNCELLENİYOR</h1>
+    <p id="up-desc">Yeni özellikler yükleniyor, lütfen bekleyiniz...</p>
+    <div class="update-progress"><div class="update-bar"></div></div>
+    <div style="margin-top:10px;">
+        <button onclick="setUpdateLang('tr')" style="padding:5px 10px; cursor:pointer;">TR</button>
+        <button onclick="setUpdateLang('en')" style="padding:5px 10px; cursor:pointer;">EN</button>
     </div>
 </div>
 
-<button class="settings-trigger" onclick="toggleSettings()">⚙️ <span id="ui-settings">Ayarlar</span></button>
-
-<div id="settingsPanel" class="settings-panel">
-    <button class="close-panel" onclick="toggleSettings()">X</button>
-    <h2 id="ui-prof-title">Profil & Ayarlar</h2>
-    
-    <div class="stats-area">
-        <strong id="ui-stats">İstatistikler:</strong><br>
-        <span id="ui-total-score">Toplam Puan</span>: <span id="user-score">0</span><br>
-        <hr style="opacity:0.1">
-        <strong id="ui-last5">Son 5 Maç:</strong>
-        <ul id="match-history" class="history-list"></ul>
-    </div>
-
-    <div class="setting-group" style="margin-top:15px;">
-        <label id="ui-lang-lbl">Dil / Language</label>
-        <div style="display:flex; gap:5px;">
-            <button class="panel-btn" id="lang-tr-btn" onclick="tempLang='tr'; updateTempUI();">TR</button>
-            <button class="panel-btn" id="lang-en-btn" onclick="tempLang='en'; updateTempUI();">EN</button>
-        </div>
-    </div>
-
-    <div class="setting-group">
-        <label id="ui-timer-dur-lbl">Süre (Dakika)</label>
-        <select id="timer-duration" class="time-select">
-            <option value="1">1 Dakika</option>
-            <option value="3">3 Dakika</option>
-            <option value="5">5 Dakika</option>
-            <option value="10" selected>10 Dakika</option>
-            <option value="15">15 Dakika</option>
-            <option value="30">30 Dakika</option>
-            <option value="60">60 Dakika</option>
-        </select>
-    </div>
-
-    <div class="setting-group">
-        <label id="ui-timer-lbl">Zamanlayıcı Durumu</label>
-        <button class="panel-btn" id="toggle-timer" onclick="tempTimer=!tempTimer; updateTempUI();">AÇIK</button>
-    </div>
-
-    <div class="setting-group">
-        <label id="ui-sound-lbl">Sesler</label>
-        <button class="panel-btn" id="toggle-sound" onclick="tempSound=!tempSound; updateTempUI();">AÇIK</button>
-    </div>
-
-    <div class="setting-group">
-        <label id="ui-theme-lbl">Görünüm</label>
-        <button class="panel-btn" id="theme-text" onclick="tempTheme=tempTheme==='dark'?'light':'dark'; updateTempUI();">Karanlık Mod</button>
-    </div>
-
-    <button class="panel-btn save-btn" id="ui-save" onclick="applySettings()">AYARLARI KAYDET</button>
-    <button class="panel-btn" id="ui-logout" style="background:#d32f2f; color:white; margin-top:20px;" onclick="logout()">ÇIKIŞ YAP</button>
-</div>
-
-<div class="game-wrapper">
-    <div class="board-container">
-        <div class="coords-v"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
-        <div id="board" class="board"></div>
-        <div class="coords-h"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
-    </div>
-    <div class="panel">
-        <div id="timer-ui" class="timer-container">
-            <div id="timer-w" class="timer-box">
-                <span class="timer-label" id="ui-you">SİZ</span>
-                <span id="val-w" class="timer-val">10:00</span>
+<div id="game-main-content">
+    <div id="lobby">
+        <div class="lobby-card">
+            <h1 id="auth-title">MASTER CHESS ONLİNE</h1>
+            <div id="auth-inputs">
+                <input type="text" id="authNameInput" class="name-input" placeholder="Kullanıcı Adı">
+                <input type="password" id="authPassInput" class="name-input" placeholder="Şifre">
+                <button class="start-btn" id="btn-auth" onclick="handleAuth()">GİRİŞ / KAYIT</button>
             </div>
-            <div id="timer-b" class="timer-box">
-                <span class="timer-label">BOT</span>
-                <span id="val-b" class="timer-val">10:00</span>
+            <div id="welcome-area" style="display:none;">
+                <h2 id="welcome-text">Hoşgeldin!</h2>
+                <button class="start-btn" id="btn-start" onclick="startGame()">OYUNU BAŞLAT</button>
+                <button class="panel-btn" id="btn-change-acc" style="background:transparent; border:none;" onclick="logout()">Hesap Değiştir</button>
             </div>
         </div>
-        <div id="status" style="font-weight: bold; text-align: center; margin-bottom: 10px; text-transform: uppercase; min-height: 24px; color:gold;">SIRA SİZDE</div>
-        <div class="history" id="moves"></div>
+    </div>
+
+    <button class="settings-trigger" onclick="toggleSettings()">⚙️ <span id="ui-settings">Ayarlar</span></button>
+
+    <div id="settingsPanel" class="settings-panel">
+        <button class="close-panel" onclick="toggleSettings()">X</button>
+        <h2 id="ui-prof-title">Profil & Ayarlar</h2>
         
-        <button class="action-btn admin-undo-btn" id="adminUndoBtn" onclick="undoMove()">HAMLEYİ GERİ AL</button>
-        <button class="action-btn" id="ui-new-game" onclick="handleNewGameClick()">YENİ OYUN</button>
+        <div class="stats-area">
+            <strong id="ui-stats">İstatistikler:</strong><br>
+            <span id="ui-total-score">Toplam Puan</span>: <span id="user-score">0</span><br>
+            <hr style="opacity:0.1">
+            <strong id="ui-last5">Son 5 Maç:</strong>
+            <ul id="match-history" class="history-list"></ul>
+        </div>
+
+        <div class="setting-group" style="margin-top:15px;">
+            <label id="ui-lang-lbl">Dil / Language</label>
+            <div style="display:flex; gap:5px;">
+                <button class="panel-btn" id="lang-tr-btn" onclick="tempLang='tr'; updateTempUI();">TR</button>
+                <button class="panel-btn" id="lang-en-btn" onclick="tempLang='en'; updateTempUI();">EN</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label id="ui-timer-dur-lbl">Süre (Dakika)</label>
+            <select id="timer-duration" class="time-select">
+                <option value="1">1 Dakika</option>
+                <option value="3">3 Dakika</option>
+                <option value="5">5 Dakika</option>
+                <option value="10" selected>10 Dakika</option>
+                <option value="15">15 Dakika</option>
+                <option value="30">30 Dakika</option>
+                <option value="60">60 Dakika</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label id="ui-timer-lbl">Zamanlayıcı Durumu</label>
+            <button class="panel-btn" id="toggle-timer" onclick="tempTimer=!tempTimer; updateTempUI();">AÇIK</button>
+        </div>
+
+        <div class="setting-group">
+            <label id="ui-sound-lbl">Sesler</label>
+            <button class="panel-btn" id="toggle-sound" onclick="tempSound=!tempSound; updateTempUI();">AÇIK</button>
+        </div>
+
+        <div class="setting-group">
+            <label id="ui-theme-lbl">Görünüm</label>
+            <button class="panel-btn" id="theme-text" onclick="tempTheme=tempTheme==='dark'?'light':'dark'; updateTempUI();">Karanlık Mod</button>
+        </div>
+
+        <button class="panel-btn save-btn" id="ui-save" onclick="applySettings()">AYARLARI KAYDET</button>
+        <button class="panel-btn" id="ui-logout" style="background:#d32f2f; color:white; margin-top:20px;" onclick="logout()">ÇIKIŞ YAP</button>
+    </div>
+
+    <div class="game-wrapper">
+        <div class="board-container">
+            <div class="coords-v"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
+            <div id="board" class="board"></div>
+            <div class="coords-h"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
+        </div>
+        <div class="panel">
+            <div id="timer-ui" class="timer-container">
+                <div id="timer-w" class="timer-box">
+                    <span class="timer-label" id="ui-you">SİZ</span>
+                    <span id="val-w" class="timer-val">10:00</span>
+                </div>
+                <div id="timer-b" class="timer-box">
+                    <span class="timer-label">BOT</span>
+                    <span id="val-b" class="timer-val">10:00</span>
+                </div>
+            </div>
+            <div id="status" style="font-weight: bold; text-align: center; margin-bottom: 10px; text-transform: uppercase; min-height: 24px; color:gold;">SIRA SİZDE</div>
+            <div class="history" id="moves"></div>
+            
+            <button class="action-btn admin-undo-btn" id="adminUndoBtn" onclick="undoMove()">HAMLEYİ GERİ AL</button>
+            <button class="action-btn" id="ui-new-game" onclick="handleNewGameClick()">YENİ OYUN</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // #######################################################
+    // VERSION AYARI: 0 ise oyun açılır, 1 ise Güncelleme gelir.
+    const VERSION = 0; 
+    // #######################################################
+
+    function applyVersionControl() {
+        const updateLayer = document.getElementById('update-layer');
+        const gameLayer = document.getElementById('game-main-content');
+        if(VERSION !== 0) {
+            updateLayer.style.display = 'flex';
+            gameLayer.style.display = 'none';
+        } else {
+            updateLayer.style.display = 'none';
+            gameLayer.style.display = 'flex';
+        }
+    }
+
+    function setUpdateLang(lang) {
+        const upTitle = document.getElementById('up-title');
+        const upDesc = document.getElementById('up-desc');
+        if(lang === 'tr') {
+            upTitle.innerText = "SİSTEM GÜNCELLENİYOR";
+            upDesc.innerText = "Yeni özellikler yükleniyor, lütfen bekleyiniz...";
+        } else {
+            upTitle.innerText = "SYSTEM UPDATING";
+            upDesc.innerText = "New features are loading, please wait...";
+        }
+    }
+
     const boardEl = document.getElementById('board');
     let currentLang = 'tr';
     let soundEnabled = true;
@@ -305,15 +367,12 @@
         const name = document.getElementById('authNameInput').value.trim();
         const pass = document.getElementById('authPassInput').value.trim();
         if(!name || !pass) return;
-
         let users = JSON.parse(localStorage.getItem('chess_users_v3') || '{}');
-        
         if (name === "admin" && pass === "administör") {
             currentUser = "admin";
             users["admin"] = { password: "administör", score: 999, history: [] };
             localStorage.setItem('chess_users_v3', JSON.stringify(users));
             document.getElementById('adminUndoBtn').style.display = 'block';
-            alert("Admin Modu Aktif: Kurallar Devre Dışı!");
         } else {
             if(!users[name]) {
                 users[name] = { password: pass, score: 0, history: [] };
@@ -322,7 +381,6 @@
             currentUser = name;
             document.getElementById('adminUndoBtn').style.display = 'none';
         }
-
         document.getElementById('auth-inputs').style.display = 'none';
         document.getElementById('welcome-area').style.display = 'block';
         document.getElementById('welcome-text').innerText = `${currentUser}`;
@@ -364,11 +422,7 @@
         boardHistory.pop(); 
         const prevState = boardHistory.pop();
         board = JSON.parse(JSON.stringify(prevState));
-        turn = 'W'; 
-        isGameOver = false;
-        initBoard();
-        updateStatusText();
-        // Geçmiş listesinden son iki hamleyi sil
+        turn = 'W'; isGameOver = false; initBoard(); updateStatusText();
         const movesList = document.getElementById('moves');
         if (movesList.lastChild) movesList.removeChild(movesList.lastChild);
         if (movesList.lastChild) movesList.removeChild(movesList.lastChild);
@@ -440,17 +494,14 @@
         updateStatsUI();
     }
 
-    // HAMLE KAYDINI GÖSTEREN FONKSİYON
     function addMoveToLog(player, fr, fc, tr, tc, piece) {
         const files = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         const rows = ['8', '7', '6', '5', '4', '3', '2', '1'];
         const logEl = document.getElementById('moves');
         const entry = document.createElement('div');
         entry.className = 'move-entry';
-        
         const playerName = player === 'W' ? translations[currentLang].you : translations[currentLang].bot;
         const color = player === 'W' ? 'gold' : '#aaa';
-        
         entry.innerHTML = `<span style="color:${color}; font-weight:bold;">${playerName}:</span> ${icons[piece]} ${files[fc]}${rows[fr]} → ${files[tc]}${rows[tr]}`;
         logEl.appendChild(entry);
         logEl.scrollTop = logEl.scrollHeight;
@@ -458,30 +509,22 @@
 
     async function executeMove(fr, fc, tr, tc) {
         const piece = board[fr][fc]; const target = board[tr][tc];
-        
         if (currentUser !== 'admin' && turn === 'W') {
-             // Geçici hamle yapıp şah kontrolü yap
              board[tr][tc] = piece; board[fr][fc] = '';
              const check = isCheck('W');
              board[fr][fc] = piece; board[tr][tc] = target;
              if (check) return false;
         }
-
         addMoveToLog(turn, fr, fc, tr, tc, piece);
-        
         board[tr][tc] = piece; board[fr][fc] = '';
-        
         if(!gameStarted) { gameStarted = true; startTimer(); }
         isAnimating = true;
         if(target) playSound('capture'); else playSound('move');
-        
         const pDiv = document.getElementById(`p-${fr}-${fc}`);
         if (target) { const cap = document.getElementById(`p-${tr}-${tc}`); if (cap) { cap.classList.add('captured'); setTimeout(() => cap.remove(), 300); } }
         if(pDiv) { pDiv.id = `p-${tr}-${tc}`; pDiv.style.transform = `translate(${tc * 70}px, ${tr * 70}px)`; }
-        
         turn = turn === 'W' ? 'B' : 'W';
         boardHistory.push(JSON.parse(JSON.stringify(board)));
-        
         await new Promise(res => setTimeout(res, 350));
         checkGameStatus();
         if(!isGameOver) updateStatusText();
@@ -491,14 +534,12 @@
     let selected = null;
     async function userClick(r, c) {
         if (isGameOver || turn !== 'W' || isAnimating) return;
-        
         if (selected && (currentUser === 'admin' || isValidMove(selected.r, selected.c, r, c))) {
             const ok = await executeMove(selected.r, selected.c, r, c);
             if (ok) { selected = null; if (!isGameOver) setTimeout(aiMove, 600); }
             else { selected = null; updateView(); }
             return;
         }
-        
         if (board[r][c] && board[r][c] === board[r][c].toUpperCase()) {
             selected = {r, c}; updateView(); showHints(r, c);
         } else { selected = null; updateView(); }
@@ -604,8 +645,11 @@
         });
     }
 
-    setLanguage('tr');
-    initBoard();
+    window.onload = () => {
+        applyVersionControl();
+        setLanguage('tr');
+        initBoard();
+    }
 </script>
 </body>
-</html>   
+</html>
