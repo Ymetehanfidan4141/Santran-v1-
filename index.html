@@ -16,7 +16,6 @@
         }
         body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; transition: background 0.3s ease; }
         
-        /* GİRİŞ EKRANI (LOBBY) */
         #lobby {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1529699211952-734e80c4d42b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
@@ -24,29 +23,27 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 2000; transition: opacity 0.5s ease;
         }
-        .lobby-card {
-            background: var(--panel-bg); padding: 40px; border-radius: 20px;
-            border: 2px solid var(--board-border); text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 350px;
-        }
+        .lobby-card { background: var(--panel-bg); padding: 40px; border-radius: 20px; border: 2px solid var(--board-border); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 350px; }
         .lobby-card h1 { margin-bottom: 25px; color: gold; letter-spacing: 2px; }
-        .start-btn { 
-            width: 100%; padding: 15px; background: #8d6e63; border: none; 
-            color: white; font-size: 18px; font-weight: bold; border-radius: 10px; 
-            cursor: pointer; margin-top: 20px; transition: transform 0.2s;
-        }
+        .start-btn { width: 100%; padding: 15px; background: #8d6e63; border: none; color: white; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 10px; transition: transform 0.2s; }
         .start-btn:hover { transform: scale(1.05); background: #a1887f; }
 
-        /* OYUN ALANI */
         .settings-trigger { position: absolute; top: 20px; left: 20px; background: var(--panel-bg); border: 1px solid var(--board-border); color: var(--text); padding: 10px 15px; cursor: pointer; border-radius: 8px; font-weight: bold; z-index: 100; }
-        .settings-panel { position: fixed; top: 0; right: -350px; width: 300px; height: 100%; background: var(--sidebar-bg); box-shadow: -5px 0 15px rgba(0,0,0,0.5); transition: right 0.3s ease; z-index: 1000; padding: 30px; border-left: 2px solid var(--board-border); box-sizing: border-box; }
+        .settings-panel { position: fixed; top: 0; right: -350px; width: 300px; height: 100%; background: var(--sidebar-bg); box-shadow: -5px 0 15px rgba(0,0,0,0.5); transition: right 0.3s ease; z-index: 1000; padding: 30px; border-left: 2px solid var(--board-border); box-sizing: border-box; overflow-y: auto; }
         .settings-panel.open { right: 0; }
-        .setting-group { margin-bottom: 20px; }
-        .setting-group label { display: block; margin-bottom: 8px; font-weight: bold; opacity: 0.8; font-size: 14px; }
-        .name-input, .diff-select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--board-border); color: var(--text); border-radius: 6px; box-sizing: border-box; margin-bottom: 10px; }
+        .setting-group { margin-bottom: 15px; }
+        .setting-group label { display: block; margin-bottom: 5px; font-weight: bold; opacity: 0.8; font-size: 13px; }
+        .name-input, .diff-select, .time-select { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--board-border); color: var(--text); border-radius: 6px; box-sizing: border-box; margin-bottom: 5px; }
         .close-panel { background: #d32f2f; color: white; border: none; padding: 5px 10px; cursor: pointer; float: right; border-radius: 4px; }
-        .panel-btn { width: 100%; padding: 12px; margin-bottom: 8px; background: var(--panel-bg); border: 1px solid var(--board-border); color: var(--text); cursor: pointer; border-radius: 6px; font-weight: bold; }
+        .panel-btn { width: 100%; padding: 10px; margin-bottom: 8px; background: var(--panel-bg); border: 1px solid var(--board-border); color: var(--text); cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 13px; }
+        .save-btn { background: #4caf50 !important; color: white !important; border: none !important; margin-top: 10px; }
         
+        .stats-area { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+        .history-list { list-style: none; padding: 0; margin: 5px 0; }
+        .history-item { padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .win-text { color: #4caf50; font-weight: bold; }
+        .lose-text { color: #f44336; font-weight: bold; }
+
         .timer-container { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; font-family: monospace; }
         .timer-box { flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border: 1px solid var(--board-border); }
         .timer-box.active { border-color: gold; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
@@ -67,9 +64,13 @@
         .check-sq { background-color: var(--check) !important; animation: pulse 1s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         .hint::after { content: ""; width: 18px; height: 18px; background: rgba(0,0,0,0.15); border-radius: 50%; }
+        
         .panel { width: 280px; background: var(--panel-bg); padding: 25px; border-radius: 15px; border: 1px solid var(--board-border); }
-        .history { height: 280px; overflow-y: auto; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; font-size: 13px; border: 1px solid rgba(0,0,0,0.2); }
-        .action-btn { width: 100%; margin-top: 20px; padding: 14px; background: #8d6e63; border: none; color: #fff; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        .history { height: 280px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; font-size: 13px; border: 1px solid rgba(0,0,0,0.2); font-family: 'Courier New', monospace; }
+        .move-entry { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .action-btn { width: 100%; margin-top: 10px; padding: 14px; background: #8d6e63; border: none; color: #fff; cursor: pointer; border-radius: 6px; font-weight: bold; transition: background 0.3s; }
+        .action-btn.confirm-state { background: #d32f2f; }
+        .admin-undo-btn { background: #ff9800 !important; color: #000 !important; display: none; }
         .coords-v, .coords-h { position: absolute; color: var(--text); font-weight: bold; display: flex; justify-content: space-around; opacity: 0.7; font-size: 14px; }
         .coords-v { left: 10px; top: 35px; flex-direction: column; height: 560px; }
         .coords-h { bottom: 10px; left: 35px; width: 560px; }
@@ -77,53 +78,74 @@
 </head>
 <body>
 
-<!-- GİRİŞ EKRANI -->
 <div id="lobby">
     <div class="lobby-card">
-        <h1>MASTER CHESS</h1>
-        <input type="text" id="lobbyNameInput" class="name-input" placeholder="İsminiz...">
-        <select id="lobbyDifficulty" class="diff-select">
-            <option value="easy">Zorluk: Kolay</option>
-            <option value="hard">Zorluk: Zor</option>
-        </select>
-        <button class="start-btn" onclick="startGame()">OYUNU BAŞLAT</button>
+        <h1 id="auth-title">MASTER CHESS ONLİNE</h1>
+        <div id="auth-inputs">
+            <input type="text" id="authNameInput" class="name-input" placeholder="Kullanıcı Adı">
+            <input type="password" id="authPassInput" class="name-input" placeholder="Şifre">
+            <button class="start-btn" id="btn-auth" onclick="handleAuth()">GİRİŞ / KAYIT</button>
+        </div>
+        <div id="welcome-area" style="display:none;">
+            <h2 id="welcome-text">Hoşgeldin!</h2>
+            <button class="start-btn" id="btn-start" onclick="startGame()">OYUNU BAŞLAT</button>
+            <button class="panel-btn" id="btn-change-acc" style="background:transparent; border:none;" onclick="logout()">Hesap Değiştir</button>
+        </div>
     </div>
 </div>
 
-<button class="settings-trigger" onclick="toggleSettings()">⚙️ <span id="btn-settings">Ayarlar</span></button>
+<button class="settings-trigger" onclick="toggleSettings()">⚙️ <span id="ui-settings">Ayarlar</span></button>
 
 <div id="settingsPanel" class="settings-panel">
     <button class="close-panel" onclick="toggleSettings()">X</button>
-    <h2 id="settings-title">Ayarlar</h2>
+    <h2 id="ui-prof-title">Profil & Ayarlar</h2>
     
-    <div class="setting-group">
-        <label id="lbl-name">Oyuncu Adı</label>
-        <input type="text" id="userNameInput" class="name-input" placeholder="İsminizi yazın..." oninput="syncNames('panel')">
+    <div class="stats-area">
+        <strong id="ui-stats">İstatistikler:</strong><br>
+        <span id="ui-total-score">Toplam Puan</span>: <span id="user-score">0</span><br>
+        <hr style="opacity:0.1">
+        <strong id="ui-last5">Son 5 Maç:</strong>
+        <ul id="match-history" class="history-list"></ul>
+    </div>
+
+    <div class="setting-group" style="margin-top:15px;">
+        <label id="ui-lang-lbl">Dil / Language</label>
+        <div style="display:flex; gap:5px;">
+            <button class="panel-btn" id="lang-tr-btn" onclick="tempLang='tr'; updateTempUI();">TR</button>
+            <button class="panel-btn" id="lang-en-btn" onclick="tempLang='en'; updateTempUI();">EN</button>
+        </div>
     </div>
 
     <div class="setting-group">
-        <label id="lbl-diff">Zorluk Seviyesi</label>
-        <select id="difficulty" class="diff-select">
-            <option value="easy" id="opt-easy">Kolay (Rastgele)</option>
-            <option value="hard" id="opt-hard">Zor (Agresif)</option>
+        <label id="ui-timer-dur-lbl">Süre (Dakika)</label>
+        <select id="timer-duration" class="time-select">
+            <option value="1">1 Dakika</option>
+            <option value="3">3 Dakika</option>
+            <option value="5">5 Dakika</option>
+            <option value="10" selected>10 Dakika</option>
+            <option value="15">15 Dakika</option>
+            <option value="30">30 Dakika</option>
+            <option value="60">60 Dakika</option>
         </select>
     </div>
 
     <div class="setting-group">
-        <label id="lbl-timer-opt">Zamanlayıcı</label>
-        <button class="panel-btn" id="btn-timer-toggle" onclick="toggleTimerOption()">Zamanlayıcı: KAPALI</button>
+        <label id="ui-timer-lbl">Zamanlayıcı Durumu</label>
+        <button class="panel-btn" id="toggle-timer" onclick="tempTimer=!tempTimer; updateTempUI();">AÇIK</button>
     </div>
 
     <div class="setting-group">
-        <label id="lbl-lang">Dil / Language</label>
-        <button class="panel-btn" onclick="setLanguage('tr')">Türkçe</button>
-        <button class="panel-btn" onclick="setLanguage('en')">English</button>
+        <label id="ui-sound-lbl">Sesler</label>
+        <button class="panel-btn" id="toggle-sound" onclick="tempSound=!tempSound; updateTempUI();">AÇIK</button>
     </div>
 
     <div class="setting-group">
-        <label id="lbl-theme">Görünüm</label>
-        <button class="panel-btn" onclick="toggleTheme()">🌓 <span id="theme-text">Karanlık Mod</span></button>
+        <label id="ui-theme-lbl">Görünüm</label>
+        <button class="panel-btn" id="theme-text" onclick="tempTheme=tempTheme==='dark'?'light':'dark'; updateTempUI();">Karanlık Mod</button>
     </div>
+
+    <button class="panel-btn save-btn" id="ui-save" onclick="applySettings()">AYARLARI KAYDET</button>
+    <button class="panel-btn" id="ui-logout" style="background:#d32f2f; color:white; margin-top:20px;" onclick="logout()">ÇIKIŞ YAP</button>
 </div>
 
 <div class="game-wrapper">
@@ -133,9 +155,9 @@
         <div class="coords-h"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
     </div>
     <div class="panel">
-        <div id="timer-ui" class="timer-container" style="display: none;">
+        <div id="timer-ui" class="timer-container">
             <div id="timer-w" class="timer-box">
-                <span class="timer-label" id="lbl-you">SİZ</span>
+                <span class="timer-label" id="ui-you">SİZ</span>
                 <span id="val-w" class="timer-val">10:00</span>
             </div>
             <div id="timer-b" class="timer-box">
@@ -143,16 +165,107 @@
                 <span id="val-b" class="timer-val">10:00</span>
             </div>
         </div>
-
-        <div id="status" style="font-weight: bold; text-align: center; margin-bottom: 10px; text-transform: uppercase; min-height: 24px;">SIRA SİZDE</div>
+        <div id="status" style="font-weight: bold; text-align: center; margin-bottom: 10px; text-transform: uppercase; min-height: 24px; color:gold;">SIRA SİZDE</div>
         <div class="history" id="moves"></div>
-        <button class="action-btn" id="new-game-btn" onclick="resetGame()">YENİ OYUN</button>
+        
+        <button class="action-btn admin-undo-btn" id="adminUndoBtn" onclick="undoMove()">HAMLEYİ GERİ AL</button>
+        <button class="action-btn" id="ui-new-game" onclick="handleNewGameClick()">YENİ OYUN</button>
     </div>
 </div>
 
 <script>
+    const boardEl = document.getElementById('board');
+    let currentLang = 'tr';
+    let soundEnabled = true;
+    let timerEnabled = true;
+    let currentUser = null;
+    let turn = 'W', isGameOver = false, isAnimating = false;
+    let gameStarted = false;
+    let boardHistory = []; 
+    
+    let tempLang = 'tr';
+    let tempTimer = true;
+    let tempSound = true;
+    let tempTheme = 'dark';
+
+    let baseTime = 600;
+    let timeW = 600, timeB = 600, timerInterval = null;
+    
+    const icons = { 'r':'♜','n':'♞','b':'♝','q':'♛','k':'♚','p':'♟','R':'♜','N':'♞','B':'♝','Q':'♛','K':'♚','P':'♟' };
+    let board = [];
+
+    let newGameConfirm = false;
+    let newGameTimer = null;
+
+    const translations = {
+        tr: {
+            settings: "Ayarlar", profTitle: "Profil & Ayarlar", stats: "İstatistikler:", totalScore: "Toplam Puan",
+            last5: "Son 5 Maç:", langLbl: "Dil / Language", timerLbl: "Zamanlayıcı Durumu", timerDurLbl: "Süre (Dakika)", soundLbl: "Sesler",
+            themeLbl: "Görünüm", logout: "ÇIKIŞ YAP", authBtn: "GİRİŞ / KAYIT", save: "AYARLARI KAYDET",
+            startBtn: "OYUNU BAŞLAT", changeAcc: "Hesap Değiştir", you: "SİZ", bot: "BOT", newGame: "YENİ OYUN",
+            confirm: "EMİN MİSİNİZ?", turn: "SIRA SİZDE", thinking: "BOT DÜŞÜNÜYOR...", win: "ŞAH MAT! KAZANDINIZ",
+            lose: "ŞAH MAT! KAYBETTİNİZ", draw: "BERABERE (PAT)", timeOutWin: "KAZANDINIZ (SÜRE BİTTİ)",
+            timeOutLose: "KAYBETTİNİZ (SÜRE BİTTİ)", dark: "Karanlık Mod", light: "Aydınlık Mod",
+            on: "AÇIK", off: "KAPALI", won: "KAZANDI", lost: "KAYBETTİ", undo: "HAMLEYİ GERİ AL"
+        },
+        en: {
+            settings: "Settings", profTitle: "Profile & Settings", stats: "Statistics:", totalScore: "Total Score",
+            last5: "Last 5 Matches:", langLbl: "Language", timerLbl: "Timer Status", timerDurLbl: "Time (Minutes)", soundLbl: "Sounds",
+            themeLbl: "Appearance", logout: "LOGOUT", authBtn: "LOGIN / REGISTER", save: "SAVE SETTINGS",
+            startBtn: "START GAME", changeAcc: "Change Account", you: "YOU", bot: "BOT", newGame: "NEW GAME",
+            confirm: "ARE YOU SURE?", turn: "YOUR TURN", thinking: "BOT THINKING...", win: "CHECKMATE! YOU WIN",
+            lose: "CHECKMATE! YOU LOSE", draw: "STALEMATE (DRAW)", timeOutWin: "WIN (TIME OUT)",
+            timeOutLose: "LOSS (TIME OUT)", dark: "Dark Mode", light: "Light Mode",
+            on: "ON", off: "OFF", won: "WON", lost: "LOST", undo: "UNDO MOVE"
+        }
+    };
+
+    function updateTempUI() {
+        const t = translations[tempLang];
+        document.getElementById('toggle-timer').innerText = tempTimer ? t.on : t.off;
+        document.getElementById('toggle-sound').innerText = tempSound ? t.on : t.off;
+        document.getElementById('theme-text').innerText = tempTheme === 'dark' ? t.dark : t.light;
+        document.getElementById('lang-tr-btn').style.border = tempLang === 'tr' ? '2px solid gold' : '1px solid var(--board-border)';
+        document.getElementById('lang-en-btn').style.border = tempLang === 'en' ? '2px solid gold' : '1px solid var(--board-border)';
+    }
+
+    function applySettings() {
+        currentLang = tempLang;
+        timerEnabled = tempTimer;
+        soundEnabled = tempSound;
+        if(tempTheme === 'light') document.body.classList.add('light-mode');
+        else document.body.classList.remove('light-mode');
+        const mins = parseInt(document.getElementById('timer-duration').value);
+        baseTime = mins * 60;
+        document.getElementById('timer-ui').style.display = timerEnabled ? 'flex' : 'none';
+        setLanguage(currentLang);
+        if(!gameStarted) { timeW = baseTime; timeB = baseTime; updateTimerDisplay(); }
+        toggleSettings();
+    }
+
+    function handleNewGameClick() {
+        const btn = document.getElementById('ui-new-game');
+        if (!newGameConfirm) {
+            newGameConfirm = true;
+            btn.innerText = translations[currentLang].confirm;
+            btn.classList.add('confirm-state');
+            newGameTimer = setTimeout(() => {
+                newGameConfirm = false;
+                btn.innerText = translations[currentLang].newGame;
+                btn.classList.remove('confirm-state');
+            }, 3000);
+        } else {
+            clearTimeout(newGameTimer);
+            newGameConfirm = false;
+            btn.innerText = translations[currentLang].newGame;
+            btn.classList.remove('confirm-state');
+            resetBoardOnly();
+        }
+    }
+
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
+        if(!soundEnabled) return;
         if(audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -162,188 +275,240 @@
         else if(type === 'check') { osc.type = 'triangle'; osc.frequency.setValueAtTime(440, audioCtx.currentTime); gain.gain.setTargetAtTime(0.1, audioCtx.currentTime, 0.2); osc.start(); osc.stop(audioCtx.currentTime + 0.2); }
     }
 
-    const boardEl = document.getElementById('board');
-    const statusEl = document.getElementById('status');
-    const movesEl = document.getElementById('moves');
-    const settingsPanel = document.getElementById('settingsPanel');
-    const userNameInput = document.getElementById('userNameInput');
-    const lobbyNameInput = document.getElementById('lobbyNameInput');
-    
-    let playerName = "";
-    let currentLang = 'tr';
-    let timerEnabled = false;
-    let timeW = 600, timeB = 600;
-    let timerInterval = null;
-
-    const langData = {
-        tr: { turn: "SIRA SİZDE", bot: "BOT DÜŞÜNÜYOR...", win: "MAT! KAZANDINIZ 🎉", lose: "MAT! KAYBETTİNİZ 💀", draw: "BERABERE (PAT)", gameover: "OYUN BİTTİ", newGame: "YENİ OYUN", dark: "Karanlık Mod", light: "Aydınlık Mod", settings: "Ayarlar", lang: "Dil", theme: "Görünüm", you: "Siz", nameLbl: "Oyuncu Adı", namePh: "İsminizi yazın...", diff: "Zorluk", easy: "Kolay", hard: "Zor", timer: "Zamanlayıcı", on: "AÇIK", off: "KAPALI", timeOut: "SÜRE BİTTİ!" },
-        en: { turn: "YOUR TURN", bot: "BOT THINKING...", win: "CHECKMATE! YOU WIN 🎉", lose: "CHECKMATE! YOU LOSE 💀", draw: "STALEMATE (DRAW)", gameover: "GAME OVER", newGame: "NEW GAME", dark: "Dark Mode", light: "Light Mode", settings: "Settings", lang: "Language", theme: "Theme", you: "You", nameLbl: "Player Name", namePh: "Type your name...", diff: "Difficulty", easy: "Easy", hard: "Hard", timer: "Timer", on: "ON", off: "OFF", timeOut: "TIME OUT!" }
-    };
-
-    const icons = { 'r':'♜','n':'♞','b':'♝','q':'♛','k':'♚','p':'♟','R':'♜','N':'♞','B':'♝','Q':'♛','K':'♚','P':'♟' };
-    let board = [
-        ['r','n','b','q','k','b','n','r'],['p','p','p','p','p','p','p','p'],
-        ['','','','','','','',''],['','','','','','','',''],
-        ['','','','','','','',''],['','','','','','','',''],
-        ['P','P','P','P','P','P','P','P'],['R','N','B','Q','K','B','N','R']
-    ];
-
-    let selected = null, turn = 'W', isGameOver = false, isAnimating = false;
-
-    // LOBBY FONKSİYONLARI
-    function startGame() {
-        playerName = lobbyNameInput.value.trim();
-        userNameInput.value = playerName;
-        document.getElementById('difficulty').value = document.getElementById('lobbyDifficulty').value;
-        document.getElementById('lobby').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('lobby').style.display = 'none';
-            updateStatus();
-        }, 500);
+    function setLanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('ui-settings').innerText = t.settings;
+        document.getElementById('ui-prof-title').innerText = t.profTitle;
+        document.getElementById('ui-stats').innerText = t.stats;
+        document.getElementById('ui-total-score').innerText = t.totalScore;
+        document.getElementById('ui-last5').innerText = t.last5;
+        document.getElementById('ui-lang-lbl').innerText = t.langLbl;
+        document.getElementById('ui-timer-lbl').innerText = t.timerLbl;
+        document.getElementById('ui-timer-dur-lbl').innerText = t.timerDurLbl;
+        document.getElementById('ui-sound-lbl').innerText = t.soundLbl;
+        document.getElementById('ui-theme-lbl').innerText = t.themeLbl;
+        document.getElementById('ui-logout').innerText = t.logout;
+        document.getElementById('ui-save').innerText = t.save;
+        document.getElementById('btn-auth').innerText = t.authBtn;
+        document.getElementById('btn-start').innerText = t.startBtn;
+        document.getElementById('btn-change-acc').innerText = t.changeAcc;
+        document.getElementById('ui-you').innerText = t.you;
+        document.getElementById('adminUndoBtn').innerText = t.undo;
+        document.getElementById('ui-new-game').innerText = newGameConfirm ? t.confirm : t.newGame;
+        updateStatusText(); 
+        updateTempUI();
     }
 
-    function syncNames(source) {
-        if(source === 'panel') {
-            playerName = userNameInput.value.trim();
-            lobbyNameInput.value = playerName;
+    function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); }
+
+    function handleAuth() {
+        const name = document.getElementById('authNameInput').value.trim();
+        const pass = document.getElementById('authPassInput').value.trim();
+        if(!name || !pass) return;
+
+        let users = JSON.parse(localStorage.getItem('chess_users_v3') || '{}');
+        
+        if (name === "admin" && pass === "administör") {
+            currentUser = "admin";
+            users["admin"] = { password: "administör", score: 999, history: [] };
+            localStorage.setItem('chess_users_v3', JSON.stringify(users));
+            document.getElementById('adminUndoBtn').style.display = 'block';
+            alert("Admin Modu Aktif: Kurallar Devre Dışı!");
+        } else {
+            if(!users[name]) {
+                users[name] = { password: pass, score: 0, history: [] };
+                localStorage.setItem('chess_users_v3', JSON.stringify(users));
+            } else if(users[name].password !== pass) return alert("Şifre Hatalı!");
+            currentUser = name;
+            document.getElementById('adminUndoBtn').style.display = 'none';
         }
-        updateStatus();
+
+        document.getElementById('auth-inputs').style.display = 'none';
+        document.getElementById('welcome-area').style.display = 'block';
+        document.getElementById('welcome-text').innerText = `${currentUser}`;
+        updateStatsUI();
     }
 
-    function toggleSettings() { settingsPanel.classList.toggle('open'); }
-    
-    function toggleTimerOption() {
-        timerEnabled = !timerEnabled;
-        document.getElementById('btn-timer-toggle').innerText = `${langData[currentLang].timer}: ${timerEnabled ? langData[currentLang].on : langData[currentLang].off}`;
-        document.getElementById('timer-ui').style.display = timerEnabled ? 'flex' : 'none';
-        if(!timerEnabled) stopTimer();
+    function logout() {
+        currentUser = null;
+        document.getElementById('lobby').style.display = 'flex';
+        document.getElementById('lobby').style.opacity = '1';
+        document.getElementById('auth-inputs').style.display = 'block';
+        document.getElementById('welcome-area').style.display = 'none';
+        document.getElementById('adminUndoBtn').style.display = 'none';
+        if(document.getElementById('settingsPanel').classList.contains('open')) toggleSettings();
+    }
+
+    function updateStatsUI() {
+        if(!currentUser) return;
+        const users = JSON.parse(localStorage.getItem('chess_users_v3'));
+        const data = users[currentUser];
+        document.getElementById('user-score').innerText = data.score;
+        const historyList = document.getElementById('match-history');
+        historyList.innerHTML = '';
+        data.history.slice(-5).reverse().forEach(m => {
+            const li = document.createElement('li'); li.className = 'history-item';
+            const resTxt = m.result === 'KAZANDI' ? translations[currentLang].won : translations[currentLang].lost;
+            li.innerHTML = `${m.date}: <span class="${m.result==='KAZANDI'?'win-text':'lose-text'}">${resTxt}</span>`;
+            historyList.appendChild(li);
+        });
+    }
+
+    function startGame() {
+        document.getElementById('lobby').style.opacity = '0';
+        setTimeout(() => { document.getElementById('lobby').style.display = 'none'; resetBoardOnly(); }, 500);
+    }
+
+    function undoMove() {
+        if (boardHistory.length < 2) return;
+        boardHistory.pop(); 
+        const prevState = boardHistory.pop();
+        board = JSON.parse(JSON.stringify(prevState));
+        turn = 'W'; 
+        isGameOver = false;
+        initBoard();
+        updateStatusText();
+        // Geçmiş listesinden son iki hamleyi sil
+        const movesList = document.getElementById('moves');
+        if (movesList.lastChild) movesList.removeChild(movesList.lastChild);
+        if (movesList.lastChild) movesList.removeChild(movesList.lastChild);
+    }
+
+    function resetBoardOnly() {
+        board = [['r','n','b','q','k','b','n','r'],['p','p','p','p','p','p','p','p'],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['P','P','P','P','P','P','P','P'],['R','N','B','Q','K','B','N','R']];
+        boardHistory = [JSON.parse(JSON.stringify(board))];
+        turn = 'W'; isGameOver = false; isAnimating = false; gameStarted = false;
+        timeW = baseTime; timeB = baseTime;
+        clearInterval(timerInterval);
+        document.getElementById('moves').innerHTML = '';
+        updateStatusText(); initBoard(); updateTimerDisplay();
+    }
+
+    function initBoard() {
+        boardEl.innerHTML = '';
+        for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+            const sq = document.createElement('div'); sq.className = `square ${(r + c) % 2 === 0 ? 'white-sq' : 'black-sq'}`;
+            sq.dataset.r = r; sq.dataset.c = c; sq.onclick = () => userClick(r, c);
+            boardEl.appendChild(sq);
+            if (board[r][c]) createPiece(r, c, board[r][c]);
+        }
+    }
+
+    function createPiece(r, c, type) {
+        const p = document.createElement('div'); p.className = `piece ${type === type.toUpperCase() ? 'white-p' : 'black-p'}`;
+        p.id = `p-${r}-${c}`; p.innerText = icons[type]; p.style.transform = `translate(${c * 70}px, ${r * 70}px)`;
+        boardEl.appendChild(p);
+    }
+
+    function updateStatusText() {
+        if(isGameOver) return;
+        document.getElementById('status').innerText = turn === 'W' ? translations[currentLang].turn : translations[currentLang].thinking;
     }
 
     function startTimer() {
-        if (!timerEnabled || isGameOver) return;
-        stopTimer();
+        if(timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
-            if (turn === 'W') {
-                timeW--;
-                if (timeW <= 0) endGame(langData[currentLang].timeOut + " (BOT WINS)");
-            } else {
-                timeB--;
-                if (timeB <= 0) endGame(langData[currentLang].timeOut + " (YOU WIN)");
-            }
+            if(isGameOver || !timerEnabled || !gameStarted) return;
+            if(turn === 'W') { timeW--; if(timeW <= 0) endGame(translations[currentLang].timeOutLose); }
+            else { timeB--; if(timeB <= 0) endGame(translations[currentLang].timeOutWin); }
             updateTimerDisplay();
         }, 1000);
     }
-
-    function stopTimer() { clearInterval(timerInterval); }
 
     function updateTimerDisplay() {
         const fmt = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
         document.getElementById('val-w').innerText = fmt(timeW);
         document.getElementById('val-b').innerText = fmt(timeB);
-        document.getElementById('timer-w').className = `timer-box ${turn==='W'&&timerEnabled?'active':''}`;
-        document.getElementById('timer-b').className = `timer-box ${turn==='B'&&timerEnabled?'active':''}`;
+        document.getElementById('timer-w').classList.toggle('active', turn === 'W' && gameStarted);
+        document.getElementById('timer-b').classList.toggle('active', turn === 'B' && gameStarted);
     }
 
     function endGame(msg) {
-        isGameOver = true;
-        stopTimer();
-        statusEl.innerText = msg;
-        statusEl.style.color = "#ff5252";
+        isGameOver = true; clearInterval(timerInterval);
+        document.getElementById('status').innerText = msg;
+        if(msg.includes('KAZANDINIZ') || msg.includes('WIN')) saveResult('KAZANDI');
+        else if(msg.includes('KAYBETTİNİZ') || msg.includes('LOSE')) saveResult('KAYBETTİ');
     }
 
-    function resetGame() { location.reload(); }
-
-    function setLanguage(lang) {
-        currentLang = lang; updateStatus();
-        document.getElementById('new-game-btn').innerText = langData[lang].newGame;
-        document.getElementById('btn-settings').innerText = langData[lang].settings;
-        document.getElementById('settings-title').innerText = langData[lang].settings;
-        document.getElementById('lbl-lang').innerText = langData[lang].lang;
-        document.getElementById('lbl-theme').innerText = langData[lang].theme;
-        document.getElementById('lbl-name').innerText = langData[lang].nameLbl;
-        document.getElementById('lbl-diff').innerText = langData[lang].diff;
-        document.getElementById('lbl-timer-opt').innerText = langData[lang].timer;
-        document.getElementById('opt-easy').innerText = langData[lang].easy;
-        document.getElementById('opt-hard').innerText = langData[lang].hard;
-        document.getElementById('lbl-you').innerText = langData[lang].you.toUpperCase();
-        document.getElementById('btn-timer-toggle').innerText = `${langData[lang].timer}: ${timerEnabled ? langData[lang].on : langData[lang].off}`;
-        userNameInput.placeholder = langData[lang].namePh;
-        updateThemeText();
+    function saveResult(res) {
+        if(!currentUser) return;
+        let users = JSON.parse(localStorage.getItem('chess_users_v3'));
+        if(res === 'KAZANDI') users[currentUser].score += 3;
+        else if(res === 'KAYBETTİ') users[currentUser].score = Math.max(0, users[currentUser].score - 1);
+        users[currentUser].history.push({ date: new Date().toLocaleDateString(), result: res });
+        localStorage.setItem('chess_users_v3', JSON.stringify(users));
+        updateStatsUI();
     }
 
-    function updateStatus() {
-        if (isGameOver) return;
-        const base = turn === 'W' ? (playerName || langData[currentLang].you) : "BOT";
-        statusEl.innerText = base + (turn === 'W' ? (currentLang==='tr'?" SIRA SİZDE":"'S TURN") : (currentLang==='tr'?" DÜŞÜNÜYOR...":" IS THINKING..."));
-    }
-
-    function initBoard() {
-        boardEl.innerHTML = '';
-        for (let r = 0; r < 8; r++) {
-            for (let c = 0; c < 8; c++) {
-                const sq = document.createElement('div');
-                sq.className = `square ${(r + c) % 2 === 0 ? 'white-sq' : 'black-sq'}`;
-                sq.dataset.r = r; sq.dataset.c = c;
-                sq.onclick = () => userClick(r, c);
-                boardEl.appendChild(sq);
-                if (board[r][c]) createPiece(r, c, board[r][c]);
-            }
-        }
-    }
-
-    function createPiece(r, c, type) {
-        const pDiv = document.createElement('div');
-        pDiv.className = `piece ${type === type.toUpperCase() ? 'white-p' : 'black-p'}`;
-        pDiv.id = `p-${r}-${c}`; pDiv.innerText = icons[type];
-        pDiv.style.transform = `translate(${c * 70}px, ${r * 70}px)`;
-        boardEl.appendChild(pDiv);
+    // HAMLE KAYDINI GÖSTEREN FONKSİYON
+    function addMoveToLog(player, fr, fc, tr, tc, piece) {
+        const files = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        const rows = ['8', '7', '6', '5', '4', '3', '2', '1'];
+        const logEl = document.getElementById('moves');
+        const entry = document.createElement('div');
+        entry.className = 'move-entry';
+        
+        const playerName = player === 'W' ? translations[currentLang].you : translations[currentLang].bot;
+        const color = player === 'W' ? 'gold' : '#aaa';
+        
+        entry.innerHTML = `<span style="color:${color}; font-weight:bold;">${playerName}:</span> ${icons[piece]} ${files[fc]}${rows[fr]} → ${files[tc]}${rows[tr]}`;
+        logEl.appendChild(entry);
+        logEl.scrollTop = logEl.scrollHeight;
     }
 
     async function executeMove(fr, fc, tr, tc) {
         const piece = board[fr][fc]; const target = board[tr][tc];
-        board[tr][tc] = piece; board[fr][fc] = '';
-        if (isCheck(turn)) { board[fr][fc] = piece; board[tr][tc] = target; return false; }
+        
+        if (currentUser !== 'admin' && turn === 'W') {
+             // Geçici hamle yapıp şah kontrolü yap
+             board[tr][tc] = piece; board[fr][fc] = '';
+             const check = isCheck('W');
+             board[fr][fc] = piece; board[tr][tc] = target;
+             if (check) return false;
+        }
 
+        addMoveToLog(turn, fr, fc, tr, tc, piece);
+        
+        board[tr][tc] = piece; board[fr][fc] = '';
+        
+        if(!gameStarted) { gameStarted = true; startTimer(); }
         isAnimating = true;
         if(target) playSound('capture'); else playSound('move');
-
-        const log = document.createElement('div');
-        log.style.padding = "4px"; log.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
-        log.innerText = `${turn==='W'?(playerName||'Siz'):'Bot'}: ${icons[piece]} ${String.fromCharCode(97+tc)}${8-tr}`;
-        movesEl.prepend(log);
-
+        
         const pDiv = document.getElementById(`p-${fr}-${fc}`);
         if (target) { const cap = document.getElementById(`p-${tr}-${tc}`); if (cap) { cap.classList.add('captured'); setTimeout(() => cap.remove(), 300); } }
         if(pDiv) { pDiv.id = `p-${tr}-${tc}`; pDiv.style.transform = `translate(${tc * 70}px, ${tr * 70}px)`; }
-
-        turn = turn === 'W' ? 'B' : 'W';
-        await new Promise(res => setTimeout(res, 350));
         
+        turn = turn === 'W' ? 'B' : 'W';
+        boardHistory.push(JSON.parse(JSON.stringify(board)));
+        
+        await new Promise(res => setTimeout(res, 350));
         checkGameStatus();
-        if(!isGameOver) { updateStatus(); startTimer(); }
-        isAnimating = false;
-        updateView();
-        return true;
+        if(!isGameOver) updateStatusText();
+        isAnimating = false; updateView(); return true;
     }
 
+    let selected = null;
     async function userClick(r, c) {
         if (isGameOver || turn !== 'W' || isAnimating) return;
-        if (selected && isValidMove(selected.r, selected.c, r, c)) {
+        
+        if (selected && (currentUser === 'admin' || isValidMove(selected.r, selected.c, r, c))) {
             const ok = await executeMove(selected.r, selected.c, r, c);
             if (ok) { selected = null; if (!isGameOver) setTimeout(aiMove, 600); }
+            else { selected = null; updateView(); }
             return;
         }
+        
         if (board[r][c] && board[r][c] === board[r][c].toUpperCase()) {
             selected = {r, c}; updateView(); showHints(r, c);
         } else { selected = null; updateView(); }
     }
 
     function checkGameStatus() {
+        if (currentUser === 'admin') return; 
         if (!hasAnyValidMove(turn)) {
-            isGameOver = true; stopTimer();
-            if (isCheck(turn)) {
-                statusEl.innerText = turn === 'W' ? langData[currentLang].lose : langData[currentLang].win;
-            } else { statusEl.innerText = langData[currentLang].draw; }
+            if (isCheck(turn)) endGame(turn === 'W' ? translations[currentLang].lose : translations[currentLang].win);
+            else endGame(translations[currentLang].draw);
         } else if (isCheck(turn)) playSound('check');
     }
 
@@ -355,8 +520,7 @@
                     if(isValidMove(r, c, tr, tc)) {
                         const org = board[tr][tc]; board[tr][tc] = p; board[r][c] = '';
                         const safe = !isCheck(color);
-                        board[r][c] = p; board[tr][tc] = org;
-                        if(safe) return true;
+                        board[r][c] = p; board[tr][tc] = org; if(safe) return true;
                     }
                 }
             }
@@ -366,7 +530,6 @@
 
     async function aiMove() {
         if (isGameOver) return;
-        const diff = document.getElementById('difficulty').value;
         let moves = [];
         for (let r=0; r<8; r++) for (let c=0; c<8; c++) {
             if (board[r][c] && board[r][c] === board[r][c].toLowerCase()) {
@@ -378,8 +541,7 @@
                         board[r][c] = p; board[tr][tc] = org;
                         if(safe) {
                             let score = org ? {p:10,n:30,b:30,r:50,q:90,k:900}[org.toLowerCase()] * 10 : 0;
-                            if(diff === 'hard') score += (3.5 - Math.abs(3.5-tr)) + (3.5 - Math.abs(3.5-tc));
-                            moves.push({fr:r, fc:c, tr:tr, tc:tc, score});
+                            moves.push({fr:r, fc:c, tr, tc, score});
                         }
                     }
                 }
@@ -393,6 +555,7 @@
     }
 
     function isValidMove(fR, fC, tR, tC) {
+        if (currentUser === 'admin') return true; 
         const p = board[fR][fC].toLowerCase(), isW = board[fR][fC] === board[fR][fC].toUpperCase(), tar = board[tR][tC];
         if (tar && (isW === (tar === tar.toUpperCase()))) return false;
         const dr = tR-fR, dc = tC-fC, sr = Math.sign(dr), sc = Math.sign(dc);
@@ -429,9 +592,10 @@
     }
 
     function showHints(r, c) {
+        if (currentUser === 'admin') return; 
         boardEl.querySelectorAll('.square').forEach(sq => {
-            if (isValidMove(r, c, parseInt(sq.dataset.r), parseInt(sq.dataset.c))) {
-                const tr = parseInt(sq.dataset.r), tc = parseInt(sq.dataset.c);
+            const tr = parseInt(sq.dataset.r), tc = parseInt(sq.dataset.c);
+            if (isValidMove(r, c, tr, tc)) {
                 const p = board[r][c], org = board[tr][tc];
                 board[tr][tc] = p; board[r][c] = '';
                 if(!isCheck(turn)) sq.classList.add('hint');
@@ -440,17 +604,8 @@
         });
     }
 
-    function toggleTheme() { 
-        document.body.classList.toggle('light-mode'); 
-        updateThemeText(); 
-    }
-
-    function updateThemeText() {
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('theme-text').innerText = isLight ? langData[currentLang].dark : langData[currentLang].light;
-    }
-
+    setLanguage('tr');
     initBoard();
 </script>
 </body>
-</html>
+</html>   
